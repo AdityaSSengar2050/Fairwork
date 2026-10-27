@@ -45,6 +45,8 @@ const elements = {
   resetDemoBtn: document.getElementById('reset-demo-btn'),
   gcpStatusText: document.getElementById('gcp-status-text'),
   gcpBadge: document.getElementById('gcp-badge'),
+  auditLedgerList: document.getElementById('audit-ledger-list'),
+  refreshAuditBtn: document.getElementById('refresh-audit-btn'),
   // Modals
   actionModal: document.getElementById('action-modal'),
   followupForm: document.getElementById('followup-form'),
@@ -110,12 +112,21 @@ async function init() {
   elements.followupForm.addEventListener('submit', handleFollowUpSubmit);
   elements.closeLoopForm.addEventListener('submit', handleCloseLoopSubmit);
   elements.resetDemoBtn.addEventListener('click', handleResetDemo);
+  if (elements.refreshAuditBtn) {
+    elements.refreshAuditBtn.addEventListener('click', renderAuditLedger);
+  }
 
-  // Global Keyboard Shortcuts (Alt+1, Alt+2, Alt+3)
+  // PWA Service Worker Registration
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+
+  // Global Keyboard Shortcuts (Alt+1, Alt+2, Alt+3, Alt+4)
   window.addEventListener('keydown', (e) => {
     if (e.altKey && e.key === '1') switchTab('panel-worker');
     if (e.altKey && e.key === '2') switchTab('panel-manager');
     if (e.altKey && e.key === '3') switchTab('panel-transparency');
+    if (e.altKey && e.key === '4') switchTab('panel-audit');
   });
 }
 
@@ -187,6 +198,7 @@ async function refreshData() {
     renderWorkerConcerns();
     renderSignals();
     renderTransparencyBoard();
+    renderAuditLedger();
   } catch (err) {
     console.error('Error refreshing data:', err);
   }
@@ -300,6 +312,7 @@ function renderSignals() {
               <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.35rem;">
                 ${isDemoBadge}
                 ${statusBadge}
+                ${signal.isSlaBreached ? '<span class="badge badge-danger">⚠️ SLA BREACHED - ESCALATED</span>' : (signal.status === 'open' ? `<span class="badge badge-info">⏳ SLA: ${signal.slaHoursRemaining}h remaining</span>` : '')}
                 <span class="badge ${riskClass === 'critical' ? 'badge-danger' : riskClass === 'high' ? 'badge-warning' : 'badge-info'}">
                   Risk ${signal.riskScore}/100
                 </span>
@@ -417,6 +430,38 @@ function renderTransparencyBoard() {
         }
       });
     });
+  }
+}
+
+// Render Cryptographic SHA-256 Audit Ledger
+async function renderAuditLedger() {
+  if (!elements.auditLedgerList) return;
+  try {
+    const res = await fetch('/api/transparency/audit-ledger');
+    const data = await res.json();
+    if (!data.ledger || data.ledger.length === 0) {
+      elements.auditLedgerList.innerHTML = `<div class="feed-item" style="text-align:center;">No audit records found.</div>`;
+      return;
+    }
+
+    elements.auditLedgerList.innerHTML = data.ledger.map(entry => `
+      <article class="feed-item" style="border-left: 4px solid var(--primary);">
+        <div class="feed-header">
+          <div>
+            <span class="badge badge-info">BLOCK #${entry.index}</span>
+            <strong style="margin-left: 0.5rem;">${escapeHtml(entry.action)}</strong>
+          </div>
+          <span class="feed-time">${formatRelativeTime(entry.timestamp)}</span>
+        </div>
+        <p class="feed-summary">${escapeHtml(entry.summary)}</p>
+        <div style="font-family: monospace; font-size: 0.75rem; background: #f8fafc; padding: 0.4rem; border-radius: 4px; word-break: break-all; color: #475569;">
+          <strong>SHA-256:</strong> ${entry.entryHash}<br>
+          <strong>Prev Hash:</strong> ${entry.prevHash.slice(0, 32)}...
+        </div>
+      </article>
+    `).join('');
+  } catch (err) {
+    console.error('Failed to load audit ledger:', err);
   }
 }
 

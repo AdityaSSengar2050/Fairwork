@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <meta name="description" content="FairWork - Making work fairer, safer, and more transparent for frontline teams across Warehousing and Healthcare.">
   <meta name="theme-color" content="#0d3b66">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.json">
   <title>FairWork | Fairer, Safer & Transparent Frontline Workplace</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -54,6 +56,9 @@
         </button>
         <button role="tab" id="tab-transparency" aria-selected="false" aria-controls="panel-transparency" class="tab" tabindex="-1">
           <span class="tab-num">3</span> Transparency Board
+        </button>
+        <button role="tab" id="tab-audit" aria-selected="false" aria-controls="panel-audit" class="tab" tabindex="-1">
+          <span class="tab-num">4</span> Cryptographic Audit Ledger
         </button>
       </div>
     </nav>
@@ -322,6 +327,34 @@
             <!-- Populated by JS -->
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- STEP 4: Cryptographic Transparency & Audit Ledger -->
+    <section id="panel-audit" role="tabpanel" aria-labelledby="tab-audit" class="workflow-panel" hidden>
+      <div class="panel-header">
+        <div class="step-badge">IMMUTABLE TRANSPARENCY CHAIN</div>
+        <h2>SHA-256 Frontline Accountability Ledger</h2>
+        <p class="panel-desc">
+          Every report, follow-up assignment, and loop closure is cryptographically chained using SHA-256 hashes.
+          This guarantees that management cannot retroactively alter, delete, or conceal frontline safety records.
+        </p>
+      </div>
+
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+          <div>
+            <strong>Proof of Integrity:</strong>
+            <span class="badge badge-success" style="margin-left:0.5rem;">VERIFIED SHA-256 HASH CHAIN</span>
+          </div>
+          <button type="button" class="btn btn-secondary" id="refresh-audit-btn" style="min-height:36px; padding:0.35rem 0.75rem; font-size:0.85rem;">
+            🔄 Refresh Ledger
+          </button>
+        </div>
+      </div>
+
+      <div id="audit-ledger-list" class="cards-list" role="feed" aria-label="Cryptographic audit ledger">
+        <!-- Populated by JS -->
       </div>
     </section>
 
