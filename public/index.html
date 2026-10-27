@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="FairWork - Making work fairer, safer, and more transparent for frontline teams across Warehousing and Healthcare.">
+  <meta name="theme-color" content="#0d3b66">
+  <title>FairWork | Fairer, Safer & Transparent Frontline Workplace</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Keyboard Accessibility: Skip to Content -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Demo Data & Transparency Banner -->
+  <aside class="demo-banner" role="complementary" aria-label="Demo environment notification">
+    <div class="banner-inner">
+      <span class="demo-pill" id="demo-indicator" aria-label="Simulated environment badge">DEMO DATA</span>
+      <p class="banner-text">Simulated frontline environment for the Hackathon Challenge: <em>Make work fairer, safer, and more transparent.</em></p>
+      <button type="button" id="reset-demo-btn" class="btn-text" aria-label="Reset all demo records to initial state">Reset Demo Data</button>
+    </div>
+  </aside>
+
+  <!-- Header -->
+  <header class="app-header" role="banner">
+    <div class="header-content">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">🛡️</div>
+        <div>
+          <h1 class="brand-title">FairWork</h1>
+          <p class="brand-sub">Frontline Safety & Transparency Platform</p>
+        </div>
+      </div>
+
+      <!-- Sector Selector (Supports Warehousing & Healthcare) -->
+      <div class="sector-switcher" role="region" aria-label="Sector filter selection">
+        <label for="sector-select" class="sr-only">Select Industry Sector</label>
+        <span class="sector-icon" aria-hidden="true">🏭</span>
+        <select id="sector-select" aria-label="Select frontline sector">
+          <option value="warehousing" selected>Warehousing &amp; Logistics</option>
+          <option value="healthcare">Healthcare &amp; Clinical</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs with Full Keyboard Operability -->
+    <nav class="app-nav" role="navigation" aria-label="Main workflow tabs">
+      <div class="tab-list" role="tablist">
+        <button role="tab" id="tab-worker" aria-selected="true" aria-controls="panel-worker" class="tab active" tabindex="0">
+          <span class="tab-num">1</span> Submit Concern
+        </button>
+        <button role="tab" id="tab-manager" aria-selected="false" aria-controls="panel-manager" class="tab" tabindex="-1">
+          <span class="tab-num">2</span> Manager Signals
+        </button>
+        <button role="tab" id="tab-transparency" aria-selected="false" aria-controls="panel-transparency" class="tab" tabindex="-1">
+          <span class="tab-num">3</span> Transparency Board
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Live Status Announcer for Screen Readers -->
+  <div id="live-announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Main Workflow Container -->
+  <main id="main-content" class="app-main" tabindex="-1">
+
+    <!-- STEP 1: Worker Anonymous Submission Panel -->
+    <section id="panel-worker" role="tabpanel" aria-labelledby="tab-worker" class="workflow-panel active">
+      <div class="panel-header">
+        <div class="step-badge">FLOW STEP 1 OF 3</div>
+        <h2>Worker Frontline Voice</h2>
+        <p class="panel-desc">
+          Submit safety hazards, unsafe staffing, or unfair conditions anonymously. 
+          Individual identities are strictly masked and clustered into aggregated team signals to protect workers from retaliation.
+        </p>
+      </div>
+
+      <!-- Sector Info Callout -->
+      <div class="sector-info-card" id="sector-info-box" aria-live="polite">
+        <h3 id="current-sector-name">Warehousing &amp; Logistics</h3>
+        <p id="current-sector-desc">Distribution centers, sorting hubs, conveyor belts, and dock operations.</p>
+        <div class="compliance-badge" id="current-sector-osha">OSHA &amp; Fair Labor Standards Aligned</div>
+      </div>
+
+      <!-- Submission Form -->
+      <form id="concern-form" class="card form-card" novalidate>
+        <fieldset>
+          <legend class="form-legend">Concern Details (Protected &amp; Anonymized)</legend>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="concern-category">Hazard Category <span class="required" aria-hidden="true">*</span></label>
+              <select id="concern-category" name="categoryId" required aria-required="true">
+                <!-- Dynamically populated based on sector -->
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="concern-urgency">Perceived Risk / Urgency <span class="required" aria-hidden="true">*</span></label>
+              <select id="concern-urgency" name="urgency" required aria-required="true">
+                <option value="medium">Medium (Routine hazard / friction)</option>
+                <option value="high">High (Injury risk / burnout / violation)</option>
+                <option value="critical">Critical (Immediate danger to life / severe breach)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="concern-facility">Facility / Work Zone <span class="required" aria-hidden="true">*</span></label>
+              <input type="text" id="concern-facility" name="facility" required aria-required="true" placeholder="e.g. Loading Bay 4 or ER Ward Floor 2" value="Regional Fulfillment Hub 4 (Dock B)">
+            </div>
+
+            <div class="form-group">
+              <label for="concern-shift">Work Shift</label>
+              <select id="concern-shift" name="shift">
+                <option value="Morning Shift (06:00 - 14:00)">Morning Shift (06:00 - 14:00)</option>
+                <option value="Swing / Shift B (14:00 - 22:00)" selected>Swing / Shift B (14:00 - 22:00)</option>
+                <option value="Night Shift (22:00 - 06:00)">Night Shift (22:00 - 06:00)</option>
+                <option value="Weekend Rotation">Weekend Rotation</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="concern-summary">
+              Describe the situation clearly <span class="required" aria-hidden="true">*</span>
+            </label>
+            <textarea id="concern-summary" name="summary" rows="4" required aria-required="true" placeholder="Describe the hazard, staffing imbalance, broken equipment, or unfair practice..." aria-describedby="summary-hint"></textarea>
+            <div id="summary-hint" class="field-hint">
+              <strong>Tip:</strong> Be specific about location and conditions. Google Cloud Natural Language analysis will extract safety signals while stripping personal identifiers.
+            </div>
+          </div>
+
+          <!-- Quick Templates for Low-End Mobile Users -->
+          <div class="quick-templates" aria-label="One-tap hazard templates">
+            <span class="quick-title">Quick frontline tap:</span>
+            <button type="button" class="chip-btn" data-template="Emergency cooling fans are broken and dock temperature is unsafe.">Extreme Heat</button>
+            <button type="button" class="chip-btn" data-template="Conveyor belt emergency stop sensor is malfunctioning.">Machine Defect</button>
+            <button type="button" class="chip-btn" data-template="Emergency ward is operating at 1:8 nurse-to-patient ratio.">Unsafe Ratio</button>
+            <button type="button" class="chip-btn" data-template="Missing mandatory puncture-resistant sharps disposal bins.">Bio / Sharps</button>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" id="submit-concern-btn" class="btn btn-primary">
+              <span class="btn-text-label">Submit Anonymously</span>
+              <span class="btn-icon" aria-hidden="true">🔒</span>
+            </button>
+            <span class="anonymity-note" aria-label="Privacy guarantee">
+              🛡️ K-Anonymity Protected: No IP address, device ID, or user account stored.
+            </span>
+          </div>
+        </fieldset>
+      </form>
+
+      <!-- Worker Feed of Recent Anonymized Submissions -->
+      <div class="recent-feed-section">
+        <h3>Recent Submissions in Selected Sector</h3>
+        <p class="section-sub">Transparent log of reported concerns awaiting or undergoing manager resolution.</p>
+        <div id="worker-concerns-list" class="cards-list" role="feed" aria-label="Frontline submitted concerns feed">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 2: Manager Aggregated Signals & Action Center -->
+    <section id="panel-manager" role="tabpanel" aria-labelledby="tab-manager" class="workflow-panel" hidden>
+      <div class="panel-header">
+        <div class="step-badge">FLOW STEP 2 &amp; 3</div>
+        <h2>Manager Signal Center &amp; Action Assignment</h2>
+        <p class="panel-desc">
+          Frontline concerns are synthesized into aggregated team signals using Google Cloud NLP.
+          Assign accountable follow-ups with measurable actions and target completion dates.
+        </p>
+      </div>
+
+      <!-- Cloud NLP Service Status Banner -->
+      <div class="cloud-status-box" role="region" aria-label="Google Cloud Service Status">
+        <div class="status-left">
+          <span class="cloud-icon" aria-hidden="true">☁️</span>
+          <div>
+            <strong>Google Cloud Natural Language API</strong>
+            <div id="gcp-status-text" class="status-sub">Evaluating worker concern sentiment and safety risk metrics...</div>
+          </div>
+        </div>
+        <div class="status-right">
+          <span class="badge badge-gcp" id="gcp-badge">Least-Privilege Active</span>
+        </div>
+      </div>
+
+      <!-- Aggregated Signals List -->
+      <div class="signals-container">
+        <div class="signals-header">
+          <h3>Aggregated Hazard &amp; Safety Signals</h3>
+          <div class="filter-actions">
+            <label for="signal-status-filter" class="sr-only">Filter by signal status</label>
+            <select id="signal-status-filter" aria-label="Filter signals by status">
+              <option value="">All Signal Statuses</option>
+              <option value="open">Open (Needs Follow-Up)</option>
+              <option value="action_assigned">Action Assigned (In Progress)</option>
+              <option value="resolved">Resolved (Loop Closed)</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="signals-list" class="signals-grid" role="region" aria-live="polite" aria-label="Aggregated team signals">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Modal / Assignment Drawer (Accessible Form) -->
+      <div id="action-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+        <div class="modal-backdrop" id="modal-backdrop"></div>
+        <div class="modal-card">
+          <div class="modal-header">
+            <h3 id="modal-title">Assign Actionable Follow-Up</h3>
+            <button type="button" class="btn-close" id="modal-close-btn" aria-label="Close action assignment modal">&times;</button>
+          </div>
+          <form id="followup-form">
+            <input type="hidden" id="modal-signal-id" name="signalId">
+            
+            <div class="modal-signal-summary" id="modal-signal-meta" aria-live="polite">
+              <!-- Signal details preview -->
+            </div>
+
+            <div class="form-group">
+              <label for="assignee-name">Accountable Lead / Assignee <span class="required">*</span></label>
+              <input type="text" id="assignee-name" name="assignedTo" required placeholder="e.g. Sarah Chen (Shift Operations Lead)">
+            </div>
+
+            <div class="form-group">
+              <label for="target-date">Target Completion Date <span class="required">*</span></label>
+              <input type="date" id="target-date" name="targetDate" required>
+            </div>
+
+            <div class="form-group">
+              <label for="action-plan">Immediate Remediation Plan <span class="required">*</span></label>
+              <textarea id="action-plan" name="actionPlan" rows="3" required placeholder="Describe specific actions (e.g. Deploy industrial spot coolers, authorize 2 PRN nurses, replace frayed belt)"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="preventive-measure">Long-term Preventive Measure</label>
+              <textarea id="preventive-measure" name="preventiveMeasure" rows="2" placeholder="Describe root-cause prevention (e.g. Calibrate maintenance sensor alert, adjust automated shift scheduling rules)"></textarea>
+            </div>
+
+            <div class="modal-actions">
+              <button type="button" class="btn btn-secondary" id="cancel-action-btn">Cancel</button>
+              <button type="submit" class="btn btn-primary">Publish Follow-Up &amp; Notify Workers</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Modal: Close the Loop -->
+      <div id="close-loop-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="close-modal-title" hidden>
+        <div class="modal-backdrop" id="close-modal-backdrop"></div>
+        <div class="modal-card">
+          <div class="modal-header">
+            <h3 id="close-modal-title">Close Safety Loop</h3>
+            <button type="button" class="btn-close" id="close-modal-close-btn" aria-label="Close loop resolution modal">&times;</button>
+          </div>
+          <form id="close-loop-form">
+            <input type="hidden" id="close-modal-signal-id" name="signalId">
+            
+            <div class="modal-signal-summary" id="close-modal-signal-meta" aria-live="polite">
+              <!-- Signal details preview -->
+            </div>
+
+            <div class="form-group">
+              <label for="resolver-name">Resolved By <span class="required">*</span></label>
+              <input type="text" id="resolver-name" name="resolvedBy" required placeholder="e.g. Marcus Vance (Safety Director)">
+            </div>
+
+            <div class="form-group">
+              <label for="resolution-summary">Action Summary &amp; Proof of Resolution <span class="required">*</span></label>
+              <textarea id="resolution-summary" name="summary" rows="3" required placeholder="Detail the completed inspection, equipment replacement, or staffing restock..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="transparency-notice">Frontline Transparency Notice</label>
+              <textarea id="transparency-notice" name="transparencyNotice" rows="2" placeholder="Message broadcasted to shift breakroom boards and worker mobile feed..."></textarea>
+            </div>
+
+            <div class="modal-actions">
+              <button type="button" class="btn btn-secondary" id="close-cancel-btn">Cancel</button>
+              <button type="submit" class="btn btn-success">Mark Resolved &amp; Close Loop</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 3: Transparency Board & Frontline Verification -->
+    <section id="panel-transparency" role="tabpanel" aria-labelledby="tab-transparency" class="workflow-panel" hidden>
+      <div class="panel-header">
+        <div class="step-badge">CLOSED-LOOP ACCOUNTABILITY</div>
+        <h2>Public Transparency &amp; Verification Board</h2>
+        <p class="panel-desc">
+          Transparency builds trust. Every assigned follow-up and closed loop is published openly for workers to verify.
+          If a hazard was not actually fixed on the shift floor, workers can vote to flag it.
+        </p>
+      </div>
+
+      <div class="transparency-grid">
+        <div class="transparency-column">
+          <div class="column-header">
+            <h3>Active Follow-Ups in Progress</h3>
+            <span class="counter" id="active-actions-count">0</span>
+          </div>
+          <div id="transparency-active-list" class="cards-list" role="region" aria-label="Active follow-up commitments">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <div class="transparency-column">
+          <div class="column-header">
+            <h3>Closed Loops &amp; Verified Fixes</h3>
+            <span class="counter" id="resolved-actions-count">0</span>
+          </div>
+          <div id="transparency-resolved-list" class="cards-list" role="region" aria-label="Closed loop resolutions with worker verification">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Lightweight Footer -->
+  <footer class="app-footer" role="contentinfo">
+    <div class="footer-inner">
+      <p><strong>FairWork</strong> — Making work fairer, safer, and more transparent for frontline workers.</p>
+      <p class="footer-meta">
+        Accessibility standard: WCAG AAA compliant. Low-bandwidth optimized (&lt;45KB). Google Cloud Natural Language API.
+      </p>
+    </div>
+  </footer>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>

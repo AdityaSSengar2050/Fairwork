@@ -1,0 +1,23 @@
+{
+  "name": "fairwork-prototype",
+  "version": "1.0.0",
+  "description": "FairWork - Making work fairer, safer, and more transparent for frontline workers",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "keywords": [
+    "fairwork",
+    "worker-safety",
+    "transparency",
+    "accessibility",
+    "google-cloud"
+  ],
+  "author": "FairWork Team",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
