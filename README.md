@@ -119,3 +119,7 @@ Then open your browser at:
 ```
 http://localhost:3000
 ```
+
+## Live demo preview
+
+[Open FairWork](https://8080-cs-e7638f3d-72a2-4839-9b7b-e84c4f19ebe1.cs-asia-southeast1-yelo.cloudshell.dev/?authuser=1)
